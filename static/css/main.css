@@ -1,0 +1,29 @@
+/* main.css */
+
+/* 设置表格样式 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+/* 设置按钮样式 */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+.chart-container {
+            transform: translate3d(0, 0, 0); /* 开启硬件加速性能 */
+}

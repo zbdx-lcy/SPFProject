@@ -1,0 +1,12 @@
+<body>
+    <form action="rhdata_add/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>
+        <input type="text" name="title">
+        </p>
+        <p>
+            <input type="file" name="file">
+        </p>
+            <input type="submit" name="上传">  上传
+    </form>
+</body>

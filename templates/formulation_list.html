@@ -1,0 +1,186 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>配方数据展示</title>
+    <!-- 引入jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- 引入Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- 引入自定义CSS -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}"><style>
+    /* 自定义表格样式 */
+    .table td,
+    .table th {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .table thead th {
+        font-weight: bold;
+        color: #fff;
+        background-color: #212529;
+        border-color: #32383e;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .table-bordered td,
+    .table-bordered th {
+        border: 1px solid #dee2e6;
+    }
+
+    .table-bordered thead th,
+    .table-bordered td,
+    .table-bordered th {
+        border: 1px solid #dee2e6;
+    }
+    /* 自定义表格样式 */
+    .table td,
+    .table th {
+        vertical-align: middle;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* 自定义表格样式：调整单元格内部样式 */
+    .table td div {
+        width: 100%;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+</head>
+<script>
+    function generateChart(event, formulationId) {
+        event.preventDefault();
+
+        // 获取用户选择的图表类型
+        var selectElement = $(event.target).closest('tr').find('select').get(0);
+        var chartType = selectElement.options[selectElement.selectedIndex].value;
+
+        // 根据不同的图表类型生成不同的URL
+        var url;
+        if (chartType === 'mods') {
+            url = `formulation/time_mod_fig/${formulationId}/`;
+        } else if (chartType === 'cure') {
+            url = 'formulation/cur_Endpoint_fig/';
+        } else if (chartType === 'visc') {
+            url = `formulation/time_viscosity_fig/${formulationId}/`;
+        } else if (chartType === 'loss') {
+            url = `formulation/time_loss_factor_fig/${formulationId}/`;
+        } else {
+            // 未知的图表类型
+            return;
+        }
+
+        // 跳转到对应的URL
+        window.location.href = url;
+    }
+</script>
+<body>
+<div class="d-flex justify-content-center align-items-center">
+<div class="container">
+    <h1 class="text-center mt-15 mb-12 offset-md-10">配方表</h1>
+    <!-- 顶部导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link" href="{% url 'formulation' %}">配方文件上传</a>#}
+{#                    </li>#}
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link" href="{% url 'rhdata' %}">流变性质文件上传</a>#}
+{#                    </li>#}
+                </ul>
+            </div>
+        </div>
+    </nav>
+<div class="col-md-8 offset-md-2">
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>配方编号</th>
+{#            <th>Formulation Name</th>#}
+            <th>PBT</th>
+            <th>TDI</th>
+            <th>三苯基铋</th>
+            <th>A3</th>
+            <th>T313</th>
+            <th>AP（40-60目）</th>
+            <th>AP（100-140目）</th>
+            <th>Al粉</th>
+            <th>交联剂TMP（三羟甲基丙烷）</th>
+            <th>扩链剂（二乙二醇）</th>
+            <th>扩链剂（三乙二醇）</th>
+            <th>在R值的前提下，再需要添加的TDI的量</th>
+            <th>操作</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for formulation in formulations %}
+            <tr>
+                <td>{{ formulation.formulation_id }}</td>
+{#                <td>{{ formulation.formulation_name }}</td>#}
+                <td>{{ formulation.pbt }}</td>
+                <td>{{ formulation.tdi }}</td>
+                <td>{{ formulation.tri_bis }}</td>
+                <td>{{ formulation.athree }}</td>
+                <td>{{ formulation.bonding_agent }}</td>
+                <td>{{ formulation.ap_small }}</td>
+                <td>{{ formulation.ap_large }}</td>
+                <td>{{ formulation.ai_powder }}</td>
+                <td>{{ formulation.tmp }}</td>
+                <td>{{ formulation.die_gly }}</td>
+                <td>{{ formulation.tri_glycol }}</td>
+                <td>{{ formulation.add_tdi }}</td>
+                <td>
+                    <!-- 选择框和组合框 -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <select class="form-select pe-2" data-formulation-id="{{ formulation.formulation_id }}">
+
+                                <option value="mods">
+                                    时间-模量图
+                                </option>
+                                <option value="cure">
+                                    固化终点-模量图
+                                </option>
+                                <option value="visc">
+                                    时间-粘度图
+                                </option>
+                                <option value="loss">
+                                    时间-损耗系数图
+                                </option>
+                            </select>
+                            <div>
+                                <a href="#" onclick="generateChart(event, {{ formulation.formulation_id }})">
+                                    <button class="btn btn-primary ps-2">生成图表</button>
+                                </a>
+                            </div>
+                        </div>
+                        </div>
+                </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+</div>
+<!-- 引入Bootstrap的JavaScript -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
